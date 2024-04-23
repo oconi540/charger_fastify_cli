@@ -1,0 +1,15 @@
+{
+  "extends": "fastify-tsconfig",
+  "compilerOptions": {
+    "outDir": "dist",
+    "sourceMap": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "db/**/**.ts",
+    "knexfile.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
