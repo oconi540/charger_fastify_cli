@@ -8,7 +8,7 @@ async function app(fastify: FastifyInstance, opts: any){
   fastify.get('/', getMessage);
   fastify.get('/charger', getAllCharger);
   fastify.get('/charger/:id', getCharger);
-  fastify.get('/history_charger', getHistoryCharger);
+  fastify.get('/charges/:id', getHistoryCharger);
 }
 
 export default app;

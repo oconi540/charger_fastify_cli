@@ -6,7 +6,7 @@ const knexInstance = knex(knexConfig.development);
 
 async function getHistoryCharger(request: Request, reply: Reply): Promise<void> {
     try {
-        const chargers = await knexInstance('history_charger');
+        const chargers = await knexInstance('charges_history');
 
         if (chargers.length > 0) {
             reply.send({
