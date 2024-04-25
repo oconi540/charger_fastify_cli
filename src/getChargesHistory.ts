@@ -4,25 +4,25 @@ import knex from 'knex';
 
 const knexInstance = knex(knexConfig.development);
 
-async function getHistoryCharger(request: Request, reply: Reply): Promise<void> {
+async function getChargesHistory(request: Request, reply: Reply): Promise<void> {
     try {
-        const chargers = await knexInstance('charges_history');
+        const charges = await knexInstance('charges_history');
 
-        if (chargers.length > 0) {
-            chargers.forEach(charger => {
-                const startDate = new Date(charger.start_date);
-                const endDate = new Date(charger.end_date);
+        if (charges.length > 0) {
+            charges.forEach(charges => {
+                const startDate = new Date(charges.start_date);
+                const endDate = new Date(charges.end_date);
                 const durationInMilliseconds = endDate.getTime() - startDate.getTime();
                 const durationInMinutes = durationInMilliseconds / (1000 * 60);
-                charger.duration = durationInMinutes;
+                charges.duration = durationInMinutes;
             });
 
             reply.send({
-                data: chargers,
+                data: charges,
             });
         } else {
             reply.code(404).send({
-                message: 'No chargers found',
+                message: 'No charges found',
                 success: false,
             });
         }
@@ -35,4 +35,4 @@ async function getHistoryCharger(request: Request, reply: Reply): Promise<void> 
     }
 }
 
-export default getHistoryCharger;
+export default getChargesHistory;
