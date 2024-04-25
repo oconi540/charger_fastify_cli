@@ -9,6 +9,14 @@ async function getHistoryCharger(request: Request, reply: Reply): Promise<void> 
         const chargers = await knexInstance('charges_history');
 
         if (chargers.length > 0) {
+            chargers.forEach(charger => {
+                const startDate = new Date(charger.start_date);
+                const endDate = new Date(charger.end_date);
+                const durationInMilliseconds = endDate.getTime() - startDate.getTime();
+                const durationInMinutes = durationInMilliseconds / (1000 * 60);
+                charger.duration = durationInMinutes;
+            });
+
             reply.send({
                 data: chargers,
             });
