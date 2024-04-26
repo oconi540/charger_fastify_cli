@@ -8,9 +8,7 @@ export async function up(knex: Knex): Promise<void> {
         table.date('start_date').notNullable();
         table.date('end_date').notNullable();
         table.string('status').notNullable();
-        table.string('Consumption').notNullable();
-        table.string('Cost').notNullable();
-        table.integer('duration').notNullable();
+        table.integer('consumption').notNullable();
     });
 }
 
