@@ -15,6 +15,25 @@ async function getChargesHistory(request: Request, reply: Reply): Promise<void> 
                 const durationInMilliseconds = endDate.getTime() - startDate.getTime();
                 const durationInMinutes = durationInMilliseconds / (1000 * 60);
                 charges.duration = durationInMinutes;
+
+                let pricePerKWh = 0;
+                switch (charges.charger) {
+                    case 'Type A':
+                        pricePerKWh = 0.15;
+                        break;
+                    case 'Type B':
+                        pricePerKWh = 0.20;
+                        break;
+                    case 'Type C':
+                        pricePerKWh = 0.25;
+                        break;
+                    default:
+                        pricePerKWh = 0;
+                }
+
+                const totalCost = (charges.Consumption || 0) * pricePerKWh;
+                charges.Cost = totalCost;
+
             });
 
             reply.send({
