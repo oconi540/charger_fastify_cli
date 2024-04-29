@@ -4,8 +4,7 @@ export async function up(knex: Knex): Promise<void> {
     await knex.schema.table('charges_history', function (table) {
         table.dropColumn('Cost');
         table.dropColumn('duration');
-    });
-    await knex.schema.table('charges_history', function (table) {
+
         table.renameColumn('Consumption', 'consumption');
     });
 }
