@@ -1,5 +1,4 @@
 import { Knex } from 'knex';
-
 export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable('charges_history', function (table) {
         table.increments('user_id').primary();
@@ -8,7 +7,9 @@ export async function up(knex: Knex): Promise<void> {
         table.date('start_date').notNullable();
         table.date('end_date').notNullable();
         table.string('status').notNullable();
-        table.integer('consumption').notNullable();
+        table.string('Consumption').notNullable();
+        table.string('Cost').notNullable();
+        table.integer('duration').notNullable();
     });
 }
 

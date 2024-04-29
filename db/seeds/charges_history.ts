@@ -1,5 +1,4 @@
 import { Knex } from 'knex';
-
 export async function seed(knex: Knex){
     await knex('charges_history').del();
     await knex('charges_history').insert([
