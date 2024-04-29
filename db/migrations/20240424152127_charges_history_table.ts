@@ -1,5 +1,4 @@
 import { Knex } from 'knex';
-
 export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable('charges_history', function (table) {
         table.increments('user_id').primary();
