@@ -6,13 +6,35 @@ const knexInstance = knex(knexConfig.development);
 
 export const getCompanies = async function getCompanies(request: Request, reply: Reply): Promise<void> {
     try {
-        const companies = await knexInstance('company');
+        const { order_by } = request.query as { order_by: string };
 
-        if (companies.length > 0) {
-            reply.send({ data: companies });
-        } else {
-            reply.code(200).send({  estado: 'No hay compañías' });
+        if (order_by === '') {
+            reply.code(400).send({ error: 'order_by no puede ser vacío' });
+            return;
         }
+
+        if (order_by !== undefined && order_by !== 'employees' && order_by !== 'year') {
+            reply.code(400).send({ error: 'order_by no válido' });
+            return;
+        }
+
+        let companies;
+
+        if (order_by === undefined) {
+            companies = await knexInstance('company');
+            if (companies.length === 0) {
+                reply.code(200).send({ estado: 'No hay compañías' });
+                return;
+            }
+        } else {
+            if (order_by === 'employees') {
+                companies = await knexInstance('company').select('*').orderBy('employees_count', 'desc');
+            } else if (order_by === 'year') {
+                companies = await knexInstance('company').select('*').orderBy('founded_year', 'asc');
+            }
+        }
+
+        reply.send({ data: companies });
     } catch (error) {
         console.error('Error fetching companies:', error);
         reply.code(500).send({ message: 'Internal server error' });
