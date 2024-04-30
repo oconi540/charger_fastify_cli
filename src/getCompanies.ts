@@ -4,9 +4,9 @@ import knex from 'knex';
 
 const knexInstance = knex(knexConfig.development);
 
-async function getCompaniesList(request: Request, reply: Reply): Promise<void> {
+export const getCompanies = async function getCompanies(request: Request, reply: Reply): Promise<void> {
     try {
-        const companies = await knexInstance('companies_list');
+        const companies = await knexInstance('company');
 
         if (companies.length > 0) {
             reply.send({ data: companies });
@@ -18,5 +18,3 @@ async function getCompaniesList(request: Request, reply: Reply): Promise<void> {
         reply.code(500).send({ message: 'Internal server error' });
     }
 }
-
-export default getCompaniesList;
