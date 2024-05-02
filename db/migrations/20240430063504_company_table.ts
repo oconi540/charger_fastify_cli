@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 export async function up(knex: Knex): Promise<void> {
-    return knex.schema.createTable('companies_list', function (table) {
-        table.increments('company_id').primary();
+    return knex.schema.createTable('company', function (table) {
+        table.increments('id').primary();
         table.string('name').notNullable();
         table.integer('founded_year').notNullable();
         table.decimal('revenue').notNullable();
@@ -10,6 +10,6 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-    return knex.schema.dropTable('companies_list');
+    return knex.schema.dropTable('company');
 }
 
