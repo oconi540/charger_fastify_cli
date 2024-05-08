@@ -1,20 +1,33 @@
 import { FastifyRequest as Request, FastifyReply as Reply } from 'fastify';
-import knexConfig from '../knexfile';
-import knex from 'knex';
-
-const knexInstance = knex(knexConfig.development);
+import { KnexCompanyRepository } from './companyRepository';
 
 export const getCompanies = async function getCompanies(request: Request, reply: Reply): Promise<void> {
     try {
-        const companies = await knexInstance('company');
+        const { orderBy} = request.query as { orderBy: string };
 
-        if (companies.length > 0) {
-            reply.send({ data: companies });
+        if (orderBy === '') {
+            reply.code(400).send({ error: 'orderBy no puede ser vacío' });
+        }
+
+        if (orderBy !== undefined && orderBy !== 'employees' && orderBy !== 'year') {
+            reply.code(400).send({ error: 'orderBy no válido' });
+        }
+
+        const companyRepository = new KnexCompanyRepository();
+
+        let sortDirection = 'desc';
+        if (orderBy === 'year') {
+            sortDirection = 'asc';
+        }
+
+        const companies = await companyRepository.getCompaniesSortedBy(orderBy, sortDirection);
+        if (companies.length === 0) {
+            reply.code(400).send({ error: 'No hay compañías' });
         } else {
-            reply.code(200).send({  estado: 'No hay compañías' });
+            reply.send({ data: companies });
         }
     } catch (error) {
         console.error('Error fetching companies:', error);
         reply.code(500).send({ message: 'Internal server error' });
     }
-}
+};
