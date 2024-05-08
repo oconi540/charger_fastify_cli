@@ -11,9 +11,7 @@ export const generateToken = async (request: Request, reply: Reply): Promise<voi
             reply.code(400).send({ error: 'Verifica el id y el secret son obligatorios.' });
         }
 
-        const numericId: number = parseInt(id);
-
-        const isValid = await verifyCredentials(numericId, secret);
+        const isValid = await verifyCredentials(parseInt(id), secret);
 
         if (!isValid) {
             reply.code(400).send({ error: 'Credenciales inválidas. Verifica el id y el secret proporcionados.' });

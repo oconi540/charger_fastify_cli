@@ -6,6 +6,7 @@ const knexInstance = knex(knexConfig.development);
 
 export interface CompanyRepository {
     getCompaniesSortedBy(sortBy: string): Promise<Company[]>;
+    findByCredentials(id: number, secret: string): Promise<Company | null>;
 }
 
 export class KnexCompanyRepository implements CompanyRepository {

@@ -4,4 +4,5 @@ export interface Company {
     founded_year: number;
     revenue: number;
     employees_count: number;
+    secret: string;
 }
