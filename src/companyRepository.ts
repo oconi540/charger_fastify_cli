@@ -26,7 +26,7 @@ export class KnexCompanyRepository implements CompanyRepository {
         throw new Error('sortBy no válido');
     }
 
-    async findByToken(id: number, secret: string) {
+    async findByToken(id: number, secret: string): Promise<Company | null> {
         return knexInstance('company').where({ id, secret }).first();
     }
 }
