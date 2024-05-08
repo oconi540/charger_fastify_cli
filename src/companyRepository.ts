@@ -24,4 +24,8 @@ export class KnexCompanyRepository implements CompanyRepository {
 
         throw new Error('sortBy no válido');
     }
+
+    async findByCredentials(id: number, secret: string) {
+        return knexInstance('company').where({ id, secret }).first();
+    }
 }
