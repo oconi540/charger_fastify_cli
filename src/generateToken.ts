@@ -11,7 +11,7 @@ export const generateToken = async (request: Request, reply: Reply): Promise<voi
             reply.code(400).send({ error: 'Verifica el id y el secret son obligatorios.' });
         }
 
-        const isValid = await verifyCredentials(parseInt(id), secret);
+        const isValid = await verifyToken(parseInt(id), secret);
 
         if (!isValid) {
             reply.code(400).send({ error: 'Credenciales inválidas. Verifica el id y el secret proporcionados.' });
@@ -22,8 +22,8 @@ export const generateToken = async (request: Request, reply: Reply): Promise<voi
     }
 }
 
-async function verifyCredentials(id: number, secret: string): Promise<boolean> {
-    const company = await companyRepository.findByCredentials(id, secret);
+async function verifyToken(id: number, secret: string): Promise<boolean> {
+    const company = await companyRepository.findByToken(id, secret);
     return !!company;
 }
 
