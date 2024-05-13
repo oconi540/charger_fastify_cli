@@ -16,16 +16,6 @@ export const generateToken = async (request: Request, reply: Reply): Promise<voi
         if (!isValid) {
             reply.code(400).send({ error: 'Credenciales inválidas. Verifica el id y el secret proporcionados.' });
         }
-
-        const accessToken = accessRefreshToken();
-        const expiresIn = 143253;
-        const refreshToken = accessRefreshToken();
-
-        reply.code(200).send({
-            access_token: accessToken,
-            expires_in: expiresIn,
-            refresh_token: refreshToken
-        });
     } catch (error) {
         reply.code(500).send({ message: 'Internal server error' });
     }
@@ -34,10 +24,4 @@ export const generateToken = async (request: Request, reply: Reply): Promise<voi
 async function verifyToken(id: number, secret: string): Promise<boolean> {
     const company = await companyRepository.findByToken(id, secret);
     return !!company;
-}
-
-const accessRefreshToken = (): string => {
-    const currentTime = new Date().getTime().toString();
-    const randomValue = Math.floor(Math.random() * 10000).toString();
-    return currentTime + randomValue;
 }
