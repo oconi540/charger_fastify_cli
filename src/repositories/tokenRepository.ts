@@ -13,6 +13,7 @@ export class KnexTokenRepository implements tokenRepository {
     async insertToken(token: Token): Promise<void> {
         await knexInstance('token').insert(token);
     }
+
     async validateRefreshToken(companyId: number, refreshToken: string): Promise<boolean> {
         const token = await knexInstance('token')
             .where({

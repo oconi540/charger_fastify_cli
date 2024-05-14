@@ -15,7 +15,6 @@ async function app(fastify: FastifyInstance, opts: any){
   fastify.get('/companies', getCompanies);
   fastify.post('/oauth/token', insertToken);
   fastify.post('/oauth/refresh-token', refreshToken);
-}
 
 export default app;
 
