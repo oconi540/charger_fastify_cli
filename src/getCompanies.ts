@@ -1,5 +1,5 @@
 import { FastifyRequest as Request, FastifyReply as Reply } from 'fastify';
-import { KnexCompanyRepository } from './companyRepository';
+import { KnexCompanyRepository } from './repositories/companyRepository';
 
 export const getCompanies = async function getCompanies(request: Request, reply: Reply): Promise<void> {
     try {
