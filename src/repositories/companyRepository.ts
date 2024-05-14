@@ -1,15 +1,15 @@
-import knexConfig from '../knexfile';
+import knexConfig from '../../knexfile';
 import knex from 'knex';
-import { Company } from './companyModel';
+import { Company } from '../models/companyModel';
 
 const knexInstance = knex(knexConfig.development);
 
-export interface CompanyRepository {
+export interface companyRepository {
     getCompaniesSortedBy(sortBy: string): Promise<Company[]>;
-    findByToken(id: number, secret: string): Promise<Company | null>;
+    findCompanyByIdAndSecret(id: number, secret: string): Promise<Company | null>;
 }
 
-export class KnexCompanyRepository implements CompanyRepository {
+export class KnexCompanyRepository implements companyRepository {
     async getCompaniesSortedBy(sortBy?: string, sortDirection?: string): Promise<Company[]> {
         if (sortBy === 'employees') {
             return knexInstance('company').select('*').orderBy('employees_count', sortDirection);
@@ -26,7 +26,7 @@ export class KnexCompanyRepository implements CompanyRepository {
         throw new Error('sortBy no válido');
     }
 
-    async findByToken(id: number, secret: string): Promise<Company | null> {
+    async findCompanyByIdAndSecret(id: number, secret: string): Promise<Company | null> {
         return knexInstance('company').where({ id, secret }).first();
     }
 }
