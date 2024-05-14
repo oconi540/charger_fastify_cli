@@ -1,10 +1,12 @@
 import { FastifyRequest as Request, FastifyReply as Reply } from 'fastify';
-import { KnexRepository } from './repository';
-import { Token } from './models';
+import { KnexTokenRepository } from './repositories/tokenRepository';
+import { KnexCompanyRepository } from './repositories/companyRepository';
+import { Token } from './models/tokenModel';
 
-const repository = new KnexRepository();
+const tokenRepository = new KnexTokenRepository();
+const companyRepository = new KnexCompanyRepository();
 
-export async function insertTokenHandler(request: Request, reply: Reply): Promise<void> {
+export async function insertToken(request: Request, reply: Reply): Promise<void> {
     const { id, secret } = request.body as { id: string; secret: string };
 
     try {
@@ -13,7 +15,7 @@ export async function insertTokenHandler(request: Request, reply: Reply): Promis
         }
 
         const companyId: number = parseInt(id);
-        const isValid = await repository.findCompanyByIdAndSecret(companyId, secret);
+        const isValid = await companyRepository.findCompanyByIdAndSecret(companyId, secret);
 
         if (!isValid) {
             reply.code(400).send({ error: 'Credenciales inválidas. Verifica el id y el secret proporcionados.' });
@@ -21,9 +23,8 @@ export async function insertTokenHandler(request: Request, reply: Reply): Promis
 
         const accessToken: string = accessRefreshToken();
         const refreshToken: string = accessRefreshToken();
-        const currentDate = new Date();
-        const expiresIn = new Date(currentDate);
-        expiresIn.setDate(currentDate.getDate() + 7);
+        const expiresIn = new Date();
+        expiresIn.setDate(expiresIn.getDate() + 7);
 
         const token: Token = {
             access_token: accessToken,
@@ -32,7 +33,7 @@ export async function insertTokenHandler(request: Request, reply: Reply): Promis
             company_id: companyId
         };
 
-        await repository.insertToken(token);
+        await tokenRepository.insertToken(token);
 
         reply.code(200).send({
             access_token: accessToken,

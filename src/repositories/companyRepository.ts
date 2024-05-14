@@ -1,15 +1,15 @@
-import knexConfig from '../knexfile';
+import knexConfig from '../../knexfile';
 import knex from 'knex';
-import { Company, Token } from './models';
+import { Company } from '../models/companyModel';
 
 const knexInstance = knex(knexConfig.development);
 
-export interface Repository {
+export interface companyRepository {
     getCompaniesSortedBy(sortBy: string): Promise<Company[]>;
     findCompanyByIdAndSecret(id: number, secret: string): Promise<Company | null>;
 }
 
-export class KnexRepository implements Repository {
+export class KnexCompanyRepository implements companyRepository {
     async getCompaniesSortedBy(sortBy?: string, sortDirection?: string): Promise<Company[]> {
         if (sortBy === 'employees') {
             return knexInstance('company').select('*').orderBy('employees_count', sortDirection);
@@ -28,9 +28,5 @@ export class KnexRepository implements Repository {
 
     async findCompanyByIdAndSecret(id: number, secret: string): Promise<Company | null> {
         return knexInstance('company').where({ id, secret }).first();
-    }
-
-    async insertToken(token: Token): Promise<void> {
-        await knexInstance('token').insert(token);
     }
 }

@@ -1,5 +1,5 @@
 import { FastifyRequest as Request, FastifyReply as Reply } from 'fastify';
-import { KnexRepository } from './repository';
+import { KnexCompanyRepository } from './repositories/companyRepository';
 
 export const getCompanies = async function getCompanies(request: Request, reply: Reply): Promise<void> {
     try {
@@ -13,14 +13,14 @@ export const getCompanies = async function getCompanies(request: Request, reply:
             reply.code(400).send({ error: 'orderBy no válido' });
         }
 
-        const Repository = new KnexRepository();
+        const companyRepository = new KnexCompanyRepository();
 
         let sortDirection = 'desc';
         if (orderBy === 'year') {
             sortDirection = 'asc';
         }
 
-        const companies = await Repository.getCompaniesSortedBy(orderBy, sortDirection);
+        const companies = await companyRepository.getCompaniesSortedBy(orderBy, sortDirection);
         if (companies.length === 0) {
             reply.code(400).send({ error: 'No hay compañías' });
         } else {
