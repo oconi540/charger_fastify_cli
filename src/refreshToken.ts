@@ -1,5 +1,7 @@
 import { FastifyRequest as Request, FastifyReply as Reply } from 'fastify';
 import { KnexTokenRepository } from './repositories/tokenRepository';
+import { Token } from './models/tokenModel';
+import { generateToken } from './generateToken'
 
 const tokenRepository = new KnexTokenRepository();
 
@@ -16,7 +18,30 @@ export async function refreshToken(request: Request, reply: Reply): Promise<void
         if (!isValidRefreshToken) {
             reply.code(401).send({ error: 'Acceso no autorizado. El refresh_token es inválido o ha expirado.' });
         }
+
+        const accessToken: string = accessRefreshToken();
+        const refreshToken: string = accessRefreshToken();
+        const expiresIn = new Date();
+        expiresIn.setDate(expiresIn.getDate() + 14);
+
+        const token: Token = {
+            access_token: accessToken,
+            expires_in: expiresIn,
+            refresh_token: refreshToken,
+            company_id: companyId
+        };
+
+        await tokenRepository.insertToken(token);
+
+        reply.code(200).send({
+            access_token: accessToken,
+            expires_in: expiresIn
+        });
     } catch (error) {
         reply.code(500).send({ message: 'Internal server error' });
     }
+}
+
+function accessRefreshToken(): string {
+    return generateToken();
 }

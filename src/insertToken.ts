@@ -2,6 +2,7 @@ import { FastifyRequest as Request, FastifyReply as Reply } from 'fastify';
 import { KnexTokenRepository } from './repositories/tokenRepository';
 import { KnexCompanyRepository } from './repositories/companyRepository';
 import { Token } from './models/tokenModel';
+import { generateToken } from './generateToken'
 
 const tokenRepository = new KnexTokenRepository();
 const companyRepository = new KnexCompanyRepository();
@@ -21,8 +22,8 @@ export async function insertToken(request: Request, reply: Reply): Promise<void>
             reply.code(400).send({ error: 'Credenciales inválidas. Verifica el id y el secret proporcionados.' });
         }
 
-        const accessToken: string = accessRefreshToken();
-        const refreshToken: string = accessRefreshToken();
+        const accessToken: string = insertTokens();
+        const refreshToken: string = insertTokens();
         const expiresIn = new Date();
         expiresIn.setDate(expiresIn.getDate() + 7);
 
@@ -45,8 +46,6 @@ export async function insertToken(request: Request, reply: Reply): Promise<void>
     }
 }
 
-function accessRefreshToken(): string {
-    const currentTime: string = new Date().getTime().toString();
-    const randomValue: string = Math.floor(Math.random() * 10000).toString();
-    return currentTime + randomValue;
+function insertTokens(): string {
+    return generateToken()
 }

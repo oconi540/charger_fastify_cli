@@ -7,7 +7,7 @@ import { getCompanies } from './getCompanies';
 import { insertToken } from './insertToken';
 import { refreshToken } from './refreshToken';
 
-async function app(fastify: FastifyInstance, opts: any){
+async function app(fastify: FastifyInstance, opts: any) {
   fastify.get('/', getMessage);
   fastify.get('/charger', getAllCharger);
   fastify.get('/charger/:id', getCharger);
@@ -15,7 +15,7 @@ async function app(fastify: FastifyInstance, opts: any){
   fastify.get('/companies', getCompanies);
   fastify.post('/oauth/token', insertToken);
   fastify.post('/oauth/refresh-token', refreshToken);
-
+}
 export default app;
 
 
