@@ -1,6 +1,7 @@
 import { FastifyRequest as Request, FastifyReply as Reply } from 'fastify';
 import { KnexTokenRepository } from './repositories/tokenRepository';
 import { Token } from './models/tokenModel';
+import { generateToken } from './generateToken'
 
 const tokenRepository = new KnexTokenRepository();
 
@@ -21,7 +22,7 @@ export async function refreshToken(request: Request, reply: Reply): Promise<void
         const accessToken: string = accessRefreshToken();
         const refreshToken: string = accessRefreshToken();
         const expiresIn = new Date();
-        expiresIn.setDate(expiresIn.getDate() + 7);
+        expiresIn.setDate(expiresIn.getDate() + 14);
 
         const token: Token = {
             access_token: accessToken,
@@ -42,7 +43,5 @@ export async function refreshToken(request: Request, reply: Reply): Promise<void
 }
 
 function accessRefreshToken(): string {
-    const currentTime: string = new Date().getTime().toString();
-    const randomValue: string = Math.floor(Math.random() * 10000).toString();
-    return currentTime + randomValue;
+    return generateToken();
 }
